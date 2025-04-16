@@ -19,10 +19,14 @@ int main() {
      scanf(" %d", &escolha);
  
      //cadastro:
-     if (escolha == 2) {
-         cadastrarUsuario(usuarios, &totalUsuarios);
-         salvarUsuarios(usuarios, totalUsuarios);
-         return 0;
+     while(escolha == 2) {
+        cadastrarUsuario(usuarios, &totalUsuarios);
+        salvarUsuarios(usuarios, totalUsuarios);
+        printf("Bem-vindo(a)!\n");
+        printf("1. Login\n");
+        printf("2. Fazer Cadastro\n");
+        printf("Opcao: ");
+        scanf(" %d", &escolha);
      }
  
      //login:
