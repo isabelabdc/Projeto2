@@ -70,15 +70,19 @@ int main() {
                 usuarios[logado].transacoes[i].valor, usuarios[logado].transacoes[i].taxa * 100);
         }
     } else if(opcao==3){
-        
+        depositar(&usuarios[logado]);
+        salvarUsuarios(usuarios, totalUsuarios);
     } else if(opcao==4){
-        
+        sacar(&usuarios[logado]);
+        salvarUsuarios(usuarios, totalUsuarios);
     } else if(opcao==5){
-       
+        comprar(&usuarios[logado], cotacoes);
+        salvarUsuarios(usuarios, totalUsuarios);
     } else if(opcao==6){
-       
+        vender(&usuarios[logado], cotacoes);
+        salvarUsuarios(usuarios, totalUsuarios);
     } else if(opcao==7){
-        
+        atualizar(&cotacoes);
     } else {
         printf("Opcao invalida. Tente novamente!\n");
     }
