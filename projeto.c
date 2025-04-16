@@ -322,3 +322,24 @@ void vender(Usuario *usuario, Cotacoes cotacoes) {
     }
     salvarExtrato(usuario);
 }
+
+//atualizando cotacoes aleatoriamnete entre -5% e +5%:
+//funcao que gera uma variacao aleatoria
+float random() {
+    return ((rand() % 101) - 50) / 1000.0f;  // -0.05 a +0.05
+}
+//funcao para atualizar cotacoes
+void atualizar(Cotacoes *cotacoes) {
+    float variacaoBitcoin = random();
+    float variacaoEthereum = random();
+    float variacaoRipple = random();
+
+    cotacoes->cotacaoBitcoin *= (1 + variacaoBitcoin);
+    cotacoes->cotacaoEthereum *= (1 + variacaoEthereum);
+    cotacoes->cotacaoRipple *= (1 + variacaoRipple);
+
+    printf("\n--- COTACOES ATUALIZADAS ---\n");
+    printf("Bitcoin: %.2f (%+.2f%%)\n", cotacoes->cotacaoBitcoin, variacaoBitcoin * 100);
+    printf("Ethereum: %.2f (%+.2f%%)\n", cotacoes->cotacaoEthereum, variacaoEthereum * 100);
+    printf("Ripple: %.2f (%+.2f%%)\n", cotacoes->cotacaoRipple, variacaoRipple * 100);
+}
