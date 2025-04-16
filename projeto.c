@@ -19,6 +19,36 @@ DataHora data() {
     return data;
 }
 
+//funcao que salva o extrato em arquivo binario:
+void salvarExtrato(Usuario *usuario) {
+    char nomeArquivo[100];
+    sprintf(nomeArquivo, "extrato_%s.bin", usuario->cpf);
+
+    FILE *arquivo = fopen(nomeArquivo, "wb");
+    if (arquivo == NULL) {
+        printf("Erro ao salvar extrato!\n");
+        return;
+    }
+    fwrite(&usuario->totalTransacoes, sizeof(int), 1, arquivo);
+    fwrite(usuario->transacoes, sizeof(Extrato), usuario->totalTransacoes, arquivo);
+    fclose(arquivo);
+}
+
+//funcao que carrega o extrato:
+void carregarExtrato(Usuario *usuario) {
+    char nomeArquivo[100];
+    sprintf(nomeArquivo, "extrato_%s.bin", usuario->cpf);
+
+    FILE *arquivo = fopen(nomeArquivo, "rb");
+    if (arquivo == NULL) {
+        usuario->totalTransacoes = 0;
+        return; 
+    }
+    fread(&usuario->totalTransacoes, sizeof(int), 1, arquivo);
+    fread(usuario->transacoes, sizeof(Extrato), usuario->totalTransacoes, arquivo);
+    fclose(arquivo);
+}
+
 //DADOS DE USUARIOS:
 //funcao para salvar dados de usuarios no arquivo
 void salvarUsuarios(Usuario usuarios[], int total) {
@@ -39,6 +69,10 @@ int carregarUsuarios(Usuario usuarios[]) {
     if (fp) {
         fread(&total, sizeof(int), 1, fp);
         fread(usuarios, sizeof(Usuario), total, fp);
+        //carrega o extrato:
+        for (int i = 0; i < total; i++) {
+            carregarExtrato(&usuarios[i]);
+        }
         fclose(fp);
     }
     return total;
