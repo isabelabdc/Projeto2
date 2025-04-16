@@ -38,3 +38,18 @@ typedef struct {
     float cotacaoEthereum;
     float cotacaoRipple;
 } Cotacoes;
+
+//declaracao de funcoes:
+DataHora data();
+void salvarExtrato(Usuario *usuario);
+void carregarExtrato(Usuario *usuario);
+void salvarUsuarios(Usuario usuarios[], int total);
+int carregarUsuarios(Usuario usuarios[]);
+int login(Usuario usuarios[], int total, char *cpf, char *senha);
+int cadastrarUsuario(Usuario usuarios[], int *total);
+void sacar(Usuario *usuario);
+void depositar(Usuario *usuario);
+void comprar(Usuario *usuario, Cotacoes cotacoes);
+void vender(Usuario *usuario, Cotacoes cotacoes);
+float variacaoAleatoria();
+void atualizar(Cotacoes *cotacoes);
