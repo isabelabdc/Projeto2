@@ -190,3 +190,135 @@ void sacar(Usuario *usuario) {
     salvarExtrato(usuario);
     printf("Saque realizado com sucesso!\n");
 }
+
+//funcao de comprar criptomoedas
+void comprar(Usuario *usuario, Cotacoes cotacoes) {
+    int opcao;
+    float valor, taxa = 0, quantidade = 0;
+    char senha[SENHA_TAM];
+    char moeda[10];
+
+    printf("1. Bitcoin (%.2f)\n", cotacoes.cotacaoBitcoin);
+    printf("2. Ethereum (%.2f)\n", cotacoes.cotacaoEthereum);
+    printf("3. Ripple (%.2f)\n", cotacoes.cotacaoRipple);
+    printf("Digite o numero da moeda que deseja comprar: ");
+    scanf("%d", &opcao);
+
+    printf("Digite o valor em reais para a compra: ");
+    scanf("%f", &valor);
+
+    if (valor <= 0 || valor > usuario->reais) {
+        printf("Valor invalido ou saldo insuficiente.\n");
+        return;
+    }
+
+    printf("Confirme sua senha: ");
+    scanf(" %19s", senha);
+
+    if (strcmp(usuario->senha, senha) != 0) {
+        printf("Senha incorreta. Operacao cancelada.\n");
+        return;
+    }
+
+    if(opcao==1) {
+            taxa = 0.02;
+            quantidade = (valor * (1 - taxa)) / cotacoes.cotacaoBitcoin;
+            strcpy(moeda, "BTC");
+            usuario->bitcoin += quantidade;
+    } else if(opcao==2){
+            taxa = 0.01;
+            quantidade = (valor * (1 - taxa)) / cotacoes.cotacaoEthereum;
+            strcpy(moeda, "ETH");
+            usuario->ethereum += quantidade;
+    } else if(opcao==3){
+            taxa = 0.01;
+            quantidade = (valor * (1 - taxa)) / cotacoes.cotacaoRipple;
+            strcpy(moeda, "XRP");
+            usuario->ripple += quantidade;
+    } else{
+            printf("Opção inválida.\n");
+            return;
+    }
+
+    usuario->reais -= valor;
+
+    printf("Compra realizada com sucesso!\nVoce comprou %.6f %s (+Taxa de: %.2f%% aplicada)\n", quantidade, moeda, taxa * 100);
+    //registra no extrato:
+    if (usuario->totalTransacoes < TOTAL_TRANSACOES) {
+        Extrato *trans = &usuario->transacoes[usuario->totalTransacoes++];
+        strcpy(trans->operacao, "Compra");
+        strcpy(trans->moeda, moeda);
+        trans->valor = valor;
+        trans->taxa = taxa;
+        trans->data = data();
+    }
+    salvarExtrato(usuario);
+}
+
+//funcao vender criptomoedas
+void vender(Usuario *usuario, Cotacoes cotacoes) {
+    int opcao;
+    float quantidade, taxa = 0, valorRecebido = 0;
+    char senha[SENHA_TAM];
+    char moeda[10];
+    float *saldoMoeda = NULL;
+    float cotacao = 0;
+
+    printf("1. Bitcoin (%.2f)\n", cotacoes.cotacaoBitcoin);
+    printf("2. Ethereum (%.2f)\n", cotacoes.cotacaoEthereum);
+    printf("3. Ripple (%.2f)\n", cotacoes.cotacaoRipple);
+    printf("Digite o numero da moeda que deseja vender: ");
+    scanf("%d", &opcao);
+
+    if(opcao==1) {
+            taxa = 0.03;
+            saldoMoeda = &usuario->bitcoin;
+            cotacao = cotacoes.cotacaoBitcoin;
+            strcpy(moeda, "BTC");
+        } else if(opcao==2){
+            taxa = 0.02;
+            saldoMoeda = &usuario->ethereum;
+            cotacao = cotacoes.cotacaoEthereum;
+            strcpy(moeda, "ETH");
+        } else if(opcao==3){
+            taxa = 0.01;
+            saldoMoeda = &usuario->ripple;
+            cotacao = cotacoes.cotacaoRipple;
+            strcpy(moeda, "XRP");
+        } else{
+            printf("Opcao invalida.\n");
+            return;
+        }
+
+    printf("Digite quantidade de %s que deseja vender: ", moeda);
+    scanf(" %f", &quantidade);
+
+    if (quantidade <= 0 || quantidade > *saldoMoeda) {
+        printf("Quantidade invalida ou saldo insuficiente.\n");
+        return;
+    }
+
+    printf("Confirme sua senha: ");
+    scanf(" %19s", senha);
+
+    if (strcmp(usuario->senha, senha) != 0) {
+        printf("Senha incorreta. Operacao cancelada.\n");
+        return;
+    }
+
+    valorRecebido = quantidade * cotacao * (1 - taxa);
+    *saldoMoeda -= quantidade;
+    usuario->reais += valorRecebido;
+
+    printf("Venda realizada com sucesso!\nVoce recebeu R$ %.2f (+Taxa de: %.2f%% aplicada)\n", valorRecebido, taxa * 100);
+    //registra no extrato:
+    if (usuario->totalTransacoes < TOTAL_TRANSACOES) {
+        Extrato *trans = &usuario->transacoes[usuario->totalTransacoes++];
+        strcpy(trans->operacao, "Venda");
+        strcpy(trans->moeda, moeda);
+        trans->valor = valorRecebido;
+        trans->taxa = taxa;
+        trans->data = data();
+    }
+    salvarExtrato(usuario);
+}
