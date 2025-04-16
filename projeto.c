@@ -104,7 +104,7 @@ int cadastrarUsuario(Usuario usuarios[], int *total) {
 
     for (int i = 0; i < *total; i++) {
         if (strcmp(usuarios[i].cpf, novo.cpf) == 0) {
-            printf("Usuario com este CPF ja está cadastrado.\n");
+            printf("Usuario com este CPF ja esta cadastrado.\n");
             return -1;
         }
     }

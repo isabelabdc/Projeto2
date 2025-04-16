@@ -11,9 +11,36 @@ int main() {
     int logado = -1;
     int escolha;
 
+     //da a opcao de fazer login ou fazer cadastro:
+     printf("Bem-vindo(a)!\n");
+     printf("1. Login\n");
+     printf("2. Fazer Cadastro\n");
+     printf("Opcao: ");
+     scanf(" %d", &escolha);
+ 
+     //cadastro:
+     if (escolha == 2) {
+         cadastrarUsuario(usuarios, &totalUsuarios);
+         salvarUsuarios(usuarios, totalUsuarios);
+         return 0;
+     }
+ 
+     //login:
+     printf("Digite seu CPF: ");
+     scanf(" %11s", cpf);
+     printf("Digite sua senha: ");
+     scanf(" %19s", senha);
+ 
+     logado = login(usuarios, totalUsuarios, cpf, senha);
+ 
+     if (logado == -1) {
+         printf("Erro! CPF ou senha incorretos.\n");
+         return 1;
+     }
+
     //menu
     int opcao;
-  
+    printf("Ola, %s!\n", usuarios[logado].nome);
     do {
         printf("1. Consultar saldo\n");
         printf("2. Consultar extrato\n");
