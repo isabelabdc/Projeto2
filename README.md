@@ -3,6 +3,7 @@ Projeto 2 -- Desenvolvimento de algoritmos
 
 GRUPO:
 Isabela Bonoto de Castro - 24.224.008-3
+,
 Gustavo Runge Passarelli - 52.224.004-3
 
 OBJETIVO:
