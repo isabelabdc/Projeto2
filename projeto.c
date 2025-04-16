@@ -43,3 +43,53 @@ int carregarUsuarios(Usuario usuarios[]) {
     }
     return total;
 }
+
+//LOGIN
+//funcao para realizacao do login
+int login(Usuario usuarios[], int total, char *cpf, char *senha) {
+    for (int i = 0; i < total; i++) {
+        if (strcmp(usuarios[i].cpf, cpf) == 0 && strcmp(usuarios[i].senha, senha) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+//CADASTRO
+//funcao para realizacao de cadastro 
+int cadastrarUsuario(Usuario usuarios[], int *total) {
+    if (*total >= TOTAL_USUARIOS) {
+        printf("Limite de usuarios atingido!\n");
+        return -1;
+    }
+
+    Usuario novo = {0};
+
+    printf("Digite seu CPF: ");
+    scanf(" %11s", novo.cpf);
+
+    for (int i = 0; i < *total; i++) {
+        if (strcmp(usuarios[i].cpf, novo.cpf) == 0) {
+            printf("Usuario com este CPF ja está cadastrado.\n");
+            return -1;
+        }
+    }
+    
+    printf("Digite seu primeiro nome: ");
+    scanf(" %49s", novo.nome);
+
+    printf("Digite sua senha: ");
+    scanf(" %19s", novo.senha);
+
+    novo.reais = 0.0;
+    novo.bitcoin = 0.0;
+    novo.ethereum = 0.0;
+    novo.ripple = 0.0;
+    novo.totalTransacoes = 0;
+
+    usuarios[*total] = novo;
+    (*total)++;
+
+    printf("Cadastro realizado com sucesso!\n");
+    return 0;
+}
