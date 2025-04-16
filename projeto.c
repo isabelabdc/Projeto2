@@ -127,3 +127,66 @@ int cadastrarUsuario(Usuario usuarios[], int *total) {
     printf("Cadastro realizado com sucesso!\n");
     return 0;
 }
+
+//FUNCIONALIDADES:
+//funcao depositar
+void depositar(Usuario *usuario) {
+    float valor;
+    printf("Digite o valor a ser depositado R$ ");
+    scanf(" %f", &valor);
+
+    if (valor <= 0) {
+        printf("Valor invalido!\n");
+        return;
+    }
+
+    usuario->reais += valor;
+
+    //registra no extrato:
+    if (usuario->totalTransacoes < TOTAL_TRANSACOES) {
+        Extrato *transacao = &usuario->transacoes[usuario->totalTransacoes++];
+        strcpy(transacao->operacao, "Deposito");
+        strcpy(transacao->moeda, "R$");
+        transacao->valor = valor;
+        transacao->taxa = 0.0;
+        transacao->data = data();
+    }
+    salvarExtrato(usuario);
+    printf("Deposito realizado com sucesso!\n");
+}
+
+//funcao sacar
+void sacar(Usuario *usuario) {
+    float valor;
+    char senhaDigitada[SENHA_TAM];
+
+    printf("Digite o valor a ser sacado R$ ");
+    scanf(" %f", &valor);
+
+    if (valor <= 0 || valor > usuario->reais) {
+        printf("Valor invalido ou saldo insuficiente!\n");
+        return;
+    }
+
+    printf("Confirme sua senha: ");
+    scanf(" %19s", senhaDigitada);
+
+    if (strcmp(usuario->senha, senhaDigitada) != 0) {
+        printf("Senha incorreta. Saque cancelado!\n");
+        return;
+    }
+
+    usuario->reais -= valor;
+
+    //registra no extrato:
+    if (usuario->totalTransacoes < TOTAL_TRANSACOES) {
+        Extrato *transacao = &usuario->transacoes[usuario->totalTransacoes++];
+        strcpy(transacao->operacao, "Saque");
+        strcpy(transacao->moeda, "R$");
+        transacao->valor = valor;
+        transacao->taxa = 0.0;
+        transacao->data = data();
+    }
+    salvarExtrato(usuario);
+    printf("Saque realizado com sucesso!\n");
+}
