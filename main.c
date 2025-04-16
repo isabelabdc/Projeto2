@@ -55,9 +55,20 @@ int main() {
    if(opcao==0){
     salvarUsuarios(usuarios, totalUsuarios);
    } else if(opcao==1){
-   
+    printf("\n--- SALDO ---\n");
+    printf("Reais: R$ %.2f\n", usuarios[logado].reais);
+    printf("Bitcoin: %.6f BTC\n", usuarios[logado].bitcoin);
+    printf("Ethereum: %.6f ETH\n", usuarios[logado].ethereum);
+    printf("Ripple: %.6f XRP\n", usuarios[logado].ripple);
     } else if(opcao==2){
-   
+        printf("\n--- EXTRATO ---\n");
+        for (int i = 0; i < usuarios[logado].totalTransacoes; i++) {
+            printf("%d/%d/%d %d:%d:%d - %s %s %.2f (Taxa: %.2f%%)\n", 
+                usuarios[logado].transacoes[i].data.dia, usuarios[logado].transacoes[i].data.mes, usuarios[logado].transacoes[i].data.ano,
+                usuarios[logado].transacoes[i].data.hora, usuarios[logado].transacoes[i].data.minuto, usuarios[logado].transacoes[i].data.segundo,
+                usuarios[logado].transacoes[i].operacao, usuarios[logado].transacoes[i].moeda, 
+                usuarios[logado].transacoes[i].valor, usuarios[logado].transacoes[i].taxa * 100);
+        }
     } else if(opcao==3){
         
     } else if(opcao==4){
